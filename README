@@ -1,0 +1,90 @@
+====================================================================
+Your name, Your university
+John P. Cunningham, Columbia University
+Copyright (C) 2013 Your name and John P. Cunningham
+
+Template Project
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+====================================================================
+
+
+====================================================================
+Basic Usage Example
+
+The following Matlab code is a simple example of how to run this project
+x = 2;
+y = 4;
+z = foo( 2 , 4 ); % should return 8
+w = bar( 2 , 4 , 0 ); % should return 0.5 with direct division
+w2 = bar( 2 , 4 , 1 ); % should return 0.5 using logs
+====================================================================
+
+
+====================================================================
+startup.m
+
+This script will run by default if Matlab starts in the root directory of this project <project_name>. If Matlab does not start in the /<project_name> directory, you should switch to it using "cd .../<project_name>", where .../<project_name> is the full directory path of the directory on your system. Then, you should run startup.m manually by simply typing "startup" into Matlab. It adds the locations of all the functions contained in our script to Matlab's search path, and attempts to create the relevant MEX files for your operating system, as needed/appropriate.
+====================================================================
+
+
+====================================================================
+foo.m
+
+foo is the core function that calls into the foo directory, where foo operations (in this template example, multiplication) are performed.  We call it with the following syntax:
+
+z = foo( x , y )
+
+where x is the first operand, and y is the second. No optional inputs.
+====================================================================
+
+====================================================================
+bar.m
+
+bar is the core function that calls into the bar directory, where bar operations (in this template example, division) are performed.  We call it with the following syntax:
+
+z = bar( x , y [, run_mode])
+
+where x is the nominator, y is the denominator, and run_mode is an optional argument forcing the code to use a particular method to obtain the solution z. Valid values of run_mode are presented in the documentation in the main bar function.
+====================================================================
+
+====================================================================
+test_project.m
+
+You can use this script to test the accuracy and speed of the supported functions in this package. The calling syntax is 
+
+test_project(method, runs, save_flag)
+
+where method is a string giving the name of the method to be tested (valid values of method are described in the documentation of the main function, test_project), runs is the number of different validation experiments to run, and save_flag is a Boolean indicating whether the results of the test should be saved, or simply displayed. To display the results without saving, save_flag can be set to 0 (false), or simply omitted. To save your results, save_flag must be set to 1. In this case, the figures will not be displayed, but will be saved as both .pdf files and .fig files to /<project_name>/results/XXX/, where XXX is a number assigned to that set of data, ranging from 001 to 999.
+====================================================================
+
+====================================================================
+The BibTeX citations for the primary papers used in this project are:
+
+@book{golub1996matrix,
+  title={Matrix computations},
+  author={Golub, Gene H and Van Loan, Charles F},
+  volume={3},
+  year={2012},
+  publisher={The Johns Hopkins University Press}
+}
+
+@article{minka2003lightspeed,
+  title={The lightspeed {MATLAB} toolbox},
+  author={Minka, Tom},
+  journal={Efficient operations for Matlab programming, Version},
+  volume={2},
+  year={2003}
+}
+====================================================================
