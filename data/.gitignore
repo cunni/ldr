@@ -1,0 +1,4 @@
+# ignore everything in this directory
+*
+# except this file.  That way this directory will remain present but empty
+!.gitignore
