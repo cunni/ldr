@@ -1,9 +1,9 @@
 ====================================================================
-Your name, Your university
 John P. Cunningham, Columbia University
-Copyright (C) 2013 Your name and John P. Cunningham
+Copyright (C) 2014 John P. Cunningham
 
-Template Project
+Stiefel and Grassmann optimization as used for linear 
+dimensionality reduction.  
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,72 +19,98 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 ====================================================================
 
+====================================================================
+Getting started
+
+This code is implemented in MATLAB.  Either open MATLAB in this 
+directory, or, once MATLAB is opened, make this directory the current
+working directory *and run startup.m*.  There are a number of calls
+to util functions and similar that require startup.m to have been run.
+====================================================================
 
 ====================================================================
 Basic Usage Example
 
 The following Matlab code is a simple example of how to run this project
-x = 2;
-y = 4;
-z = foo( 2 , 4 ); % should return 8
-w = bar( 2 , 4 , 0 ); % should return 0.5 with direct division
-w2 = bar( 2 , 4 , 1 ); % should return 0.5 using logs
-====================================================================
 
+> test_maf( 8 , 2 )
 
-====================================================================
-startup.m
+#Note that this will run MAF (maximum autocorrelation factors), which 
+maximizes the correlation between adjacent points in an effort to 
+find dimensions in the data that are most temporally smooth. There is 
+also a heuristic version based on old literature that implements an
+LDA-like eigenvector solution.  This simply serves as a comparison.
+The code will produce a figure with each cardinal dimension of the
+data plotted in green, and the ordered MAF dimensions plotted in black
+(for the LDA-like method) and red (for the Stiefel method).  Data are 
+plotted against the temporal dimension (horizontal dimension). These 
+look similar for these simple examples, though the Stiefel method is
+numerically superior.  For this result and further explanations, see
+Cunningham and Ghahramani (2014), at http://arxiv.org/abs/1406.0873 .
 
-This script will run by default if Matlab starts in the root directory of this project <project_name>. If Matlab does not start in the /<project_name> directory, you should switch to it using "cd .../<project_name>", where .../<project_name> is the full directory path of the directory on your system. Then, you should run startup.m manually by simply typing "startup" into Matlab. It adds the locations of all the functions contained in our script to Matlab's search path, and attempts to create the relevant MEX files for your operating system, as needed/appropriate.
-====================================================================
+Another simple example is;
 
+> test_pca( d , r )
 
-====================================================================
-foo.m
+where d and r are the data dimension and the low-dimensional projection
+dimension ( r<d ).  This is the same as above, so
 
-foo is the core function that calls into the foo directory, where foo operations (in this template example, multiplication) are performed.  We call it with the following syntax:
+> test_pca( 120 , 4 )
 
-z = foo( x , y )
+is also perfectly reasonable.  NOTE: these pca examples are entirely 
+confirmatory, because we know that standard PCA (with svd) is globally
+optimal.  Any departure here from the standard PCA result is numerical
+optimization issues.  The error here should be 0 or tiny; if not, increase
+the iteration count or decrease the convergence tolerance.
 
-where x is the first operand, and y is the second. No optional inputs.
-====================================================================
+To run all methods and reproduce figure results from the paper, run:
 
-====================================================================
-bar.m
+> test_project() % make sure run_meth is flagged to 1.
 
-bar is the core function that calls into the bar directory, where bar operations (in this template example, division) are performed.  We call it with the following syntax:
-
-z = bar( x , y [, run_mode])
-
-where x is the nominator, y is the denominator, and run_mode is an optional argument forcing the code to use a particular method to obtain the solution z. Valid values of run_mode are presented in the documentation in the main bar function.
-====================================================================
-
-====================================================================
-test_project.m
-
-You can use this script to test the accuracy and speed of the supported functions in this package. The calling syntax is 
-
-test_project(method, runs, save_flag)
-
-where method is a string giving the name of the method to be tested (valid values of method are described in the documentation of the main function, test_project), runs is the number of different validation experiments to run, and save_flag is a Boolean indicating whether the results of the test should be saved, or simply displayed. To display the results without saving, save_flag can be set to 0 (false), or simply omitted. To save your results, save_flag must be set to 1. In this case, the figures will not be displayed, but will be saved as both .pdf files and .fig files to /<project_name>/results/XXX/, where XXX is a number assigned to that set of data, ranging from 001 to 999.
 ====================================================================
 
 ====================================================================
-The BibTeX citations for the primary papers used in this project are:
+Understanding This Code Computationally
 
-@book{golub1996matrix,
-  title={Matrix computations},
-  author={Golub, Gene H and Van Loan, Charles F},
-  volume={3},
-  year={2012},
-  publisher={The Johns Hopkins University Press}
+Functions like test_* and run_* are simply wrappers to handle various
+function calls.  Other than instantiating test data (test_*) and setting
+initial points (run_*), these methods hold no intrinsic computation or 
+complexity.  All real computation is in:
+
+f_pca
+f_maf
+minimize_...
+project_stiefel
+
+The f_* functions are where the objective and gradient of the optimization
+is calculated.  These are typically the vast users of any computational
+allocation in this method, because they often operate on the data structures
+themselves.    
+
+minimize_stiefel_sd can be seen as a simple steepest descent method (with 
+linesearch), with a few Stiefel tweaks.  There is similarly _grassmann_trust
+which does a second order trust region optimization over the Grassmann manifold, 
+or _grassmann_mosd which does steepest descent using the manopt library (mo).
+Any minimize_ routine calls feval multiple times
+on f_* to get a current f and gradf (objective and free gradient).  There are also
+some alternative inner products (rather than Euclidean inner products)
+which add a bit of computation and warrant consideration. This function also
+calls project_stiefel, which is a simple svd method that projects any matrix down
+to its closest point on the Stiefel manifold, which is to say that calling
+project_stiefel( Q ) for any matrix Q gives the closest matrix to Q of the same size 
+that has orthonormal columns.  That requires computation also.
+====================================================================
+
+====================================================================
+The BibTeX citations for the primary papers used in this project are
+the following and all the references therein.  Note that this will 
+be updated upon publication.
+
+@article{cunningham2014ldr,
+  title={Unifying linear dimensionality reduction},
+  author={J.P. Cunningham and Z. Ghahramani},
+  year={2014},
+  journal={In Review.  Preprint: http://arxiv.org/abs/1406.0873}
 }
 
-@article{minka2003lightspeed,
-  title={The lightspeed {MATLAB} toolbox},
-  author={Minka, Tom},
-  journal={Efficient operations for Matlab programming, Version},
-  volume={2},
-  year={2003}
-}
 ====================================================================
