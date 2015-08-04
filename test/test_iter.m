@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Copyright (C) 2014 John P. Cunningham
+% Copyright (C) 2015 John P. Cunningham
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -8,6 +8,17 @@
 % test_iter.m
 %
 % tests the iteration count of several optimization methods.
+% IMPORTANT NOTE:
+% This function will not work right out of the box.  You should go into
+% test_pca.m and change     
+% optims = {'heuristic','grassmann_trust'};
+% to 
+% optims = {'heuristic','stiefel', 'stiefel_mosd', 'stiefel_trust', 'grassmann_mosd', 'grassmann_trust'};
+% This will make pca use all different optimization methods.
+% The code is not quite scoped for that because it is an awkward use case,
+% so this bit of hackery is required.  Apologies :).  You will also want to check the
+% arguments to this function carefully should you wish to reproduce the
+% figures from the paper exactly.  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [] = test_iter( run_meth , show_fig , save_fig , num_runs )
 
