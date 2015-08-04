@@ -1,9 +1,13 @@
 ====================================================================
 John P. Cunningham, Columbia University
-Copyright (C) 2014 John P. Cunningham
+Copyright (C) 2015 John P. Cunningham
 
-Stiefel and Grassmann optimization as used for linear 
-dimensionality reduction.  
+Matrix manifold optimization as used for linear 
+dimensionality reduction.
+
+This code implements the algorithms and experiments discussed in 
+Cunningham and Ghahramani (2015), Journal of Machine Learning Research
+(see ref below).  
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,9 +37,14 @@ Basic Usage Example
 
 The following Matlab code is a simple example of how to run this project
 
-> test_maf( 8 , 2 )
+> % first set up parameters
+> parms = struct('show_fig',1,'save_fig',0,'randseed',0);
+> % now run MAF
+> test_maf( 8 , 2 , parms);
+> % note that red dimensions are smoother than green (the first two dimensions
+of the data) and black (the heuristic solver).
 
-#Note that this will run MAF (maximum autocorrelation factors), which 
+Note that this will run MAF (maximum autocorrelation factors), which 
 maximizes the correlation between adjacent points in an effort to 
 find dimensions in the data that are most temporally smooth. There is 
 also a heuristic version based on old literature that implements an
@@ -46,16 +55,16 @@ data plotted in green, and the ordered MAF dimensions plotted in black
 plotted against the temporal dimension (horizontal dimension). These 
 look similar for these simple examples, though the Stiefel method is
 numerically superior.  For this result and further explanations, see
-Cunningham and Ghahramani (2014), at http://arxiv.org/abs/1406.0873 .
+the paper (reference below).
 
 Another simple example is;
 
-> test_pca( d , r )
+> test_pca( d , r , parms)
 
 where d and r are the data dimension and the low-dimensional projection
-dimension ( r<d ).  This is the same as above, so
+dimension ( r<d ).  
 
-> test_pca( 120 , 4 )
+> test_pca( 120 , 4 , parms)
 
 is also perfectly reasonable.  NOTE: these pca examples are entirely 
 confirmatory, because we know that standard PCA (with svd) is globally
@@ -63,9 +72,15 @@ optimal.  Any departure here from the standard PCA result is numerical
 optimization issues.  The error here should be 0 or tiny; if not, increase
 the iteration count or decrease the convergence tolerance.
 
-To run all methods and reproduce figure results from the paper, run:
+To run several methods and reproduce figure results from the paper, run:
 
-> test_project() % make sure run_meth is flagged to 1.
+> test_project( 1 , ‘r_sweep’ , 1 , 0); 
+> % make sure your editor pastes those quotation marks in a MATLAB acceptable form!
+ 
+Doing so will produce exactly figures 2B, 3B, and 3D from the paper (ref below).
+You can then do a ‘d_sweep’, and can then run test_iter, test_lda, and test_convergence to 
+reproduce the remaining figures from the paper.  Note that these last three require 
+a bit of mucking with the code; see those .m files for details.
 
 ====================================================================
 
@@ -102,15 +117,15 @@ that has orthonormal columns.  That requires computation also.
 ====================================================================
 
 ====================================================================
-The BibTeX citations for the primary papers used in this project are
+The BibTeX citations for the primary paper used in this project are
 the following and all the references therein.  Note that this will 
 be updated upon publication.
 
-@article{cunningham2014ldr,
-  title={Unifying linear dimensionality reduction},
+@article{cunningham2015ldr,
+  title={Linear dimensionality reduction: survey, insights, and generalizations},
   author={J.P. Cunningham and Z. Ghahramani},
-  year={2014},
-  journal={In Review.  Preprint: http://arxiv.org/abs/1406.0873}
+  year={2015},
+  journal={Journal of Machine Learning Research}
 }
 
 ====================================================================

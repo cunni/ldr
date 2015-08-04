@@ -1,0 +1,55 @@
+PROJ	= results20090115
+
+# Do not modify below this line
+
+BIBTEX   = bibtex
+LATEX    = latex
+XDVI     = xdvi
+DVI2PS   = dvips
+PS2PDF   = ps2pdf13
+L2H      = latex2html
+GH       = gv
+
+BIB      = $(PROJ).bib
+BBL      = $(PROJ).bbl
+SRC      = $(PROJ).tex
+DEP      = *.tex
+
+TRG	= $(PROJ).dvi
+PSF     = $(PROJ).ps
+PDF     = $(PROJ).pdf
+
+all : $(TRG)
+
+$(BBL) : $(BIB)
+        # do it again, so that it will run twice (to get cross-refs)
+	$(LATEX) $(SRC)
+	$(BIBTEX) $(PROJ)	
+
+$(TRG) : $(DEP)
+	$(LATEX) $(SRC)
+	$(LATEX) $(SRC)
+
+$(PSF) : $(TRG)
+	$(DVI2PS) $(TRG) -t letter -Ppdf -G0 -o $(PSF)
+
+$(PDF) : $(PSF)
+	$(PS2PDF) $(PSF)
+
+show : 	$(TRG)
+	$(XDVI) $(TRG)
+
+showps : $(PSF)
+	$(GH) $(PSF)
+
+ps : $(PSF) 
+
+pdf : $(PDF) 
+
+html : $(DEP) 
+	$(L2H) $(SRC)
+
+clean :
+	-rm -f $(TRG) $(PSF) $(PDF) *.aux *.log *.bbl
+
+.PHONY : all show clean ps showps
