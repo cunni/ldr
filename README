@@ -30,6 +30,10 @@ This code is implemented in MATLAB.  Either open MATLAB in this
 directory, or, once MATLAB is opened, make this directory the current
 working directory *and run startup.m*.  There are a number of calls
 to util functions and similar that require startup.m to have been run.
+
+Update 2016: please note that a python package for much of the underlying
+optimization is now available at https://pymanopt.github.io/ .  You
+may prefer that library, if you wish to work in python.
 ====================================================================
 
 ====================================================================
